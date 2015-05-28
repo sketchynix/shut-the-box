@@ -1,25 +1,24 @@
 'use strict';
 
 var React = require('react/addons');
-var ReactTransitionGroup = React.addons.TransitionGroup;
+var Card = require('Card');
+var Dice = require('Dice');
 
 // CSS
 require('normalize.css');
 require('../styles/main.css');
 
-var imageURL = require('../images/yeoman.png');
-
 var ShutTheBoxApp = React.createClass({
   render: function() {
+    /* jshint ignore:start */
     return (
-      <div className='main'>
-        <ReactTransitionGroup transitionName="fade">
-          <img src={imageURL} />
-        </ReactTransitionGroup>
+      <div className='shut-the-box-game-wrap' role="main">
       </div>
     );
+    /* jshint ignore:end */
   }
 });
-React.render(<ShutTheBoxApp />, document.getElementById('content')); // jshint ignore:line
+
+React.render(<ShutTheBoxApp />, document.getElementById('content'));
 
 module.exports = ShutTheBoxApp;
