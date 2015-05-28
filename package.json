@@ -10,8 +10,9 @@
   "mainInput": "ShutTheBoxApp",
   "mainOutput": "main",
   "dependencies": {
-    "react": "~0.12.2",
-    "normalize.css": "~3.0.3"
+    "flummox": "^3.5.2",
+    "normalize.css": "~3.0.3",
+    "react": "~0.13.3"
   },
   "devDependencies": {
     "grunt": "~0.4.5",

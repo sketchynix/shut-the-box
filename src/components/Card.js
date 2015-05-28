@@ -24,9 +24,11 @@ var Card = React.createClass({
 		}
 	},
 	render(){
+		/* jshint ignore:start */
 		return (
-			<div className="card-face" onClick="{this.flip}">{this.value}</div>
+			<div className="card-face" onClick={this.flip}>{this.value}</div>
 		)
+		/* jshint ignore:end */
 	}
 });
 

@@ -61,11 +61,11 @@ var util = {
 			return [];
 		}
 
-		if (k == set.length) {
+		if (k === set.length) {
 			return [set];
 		}
 
-		if (k == 1) {
+		if (k === 1) {
 			combs = [];
 			for (i = 0; i < set.length; i++) {
 				combs.push([set[i]]);
