@@ -139,6 +139,9 @@ export default class GameStore extends Store {
 	 * @return {[type]}
 	 */
 	end(){
-
+		this.setState({
+			isGameOver: true,
+			score: Util.sumArray( this.getUnflippedCardNumbers() )
+		});
 	}
 }
