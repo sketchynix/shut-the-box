@@ -73,6 +73,14 @@ module.exports = function (grunt) {
       }
     },
 
+    sass: {
+        dist: {
+            files: {
+                'src/styles/main.css': 'src/scss/main.scss'
+            }
+        }
+    },
+
     copy: {
       dist: {
         files: [
@@ -119,7 +127,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('test', ['karma']);
 
-  grunt.registerTask('build', ['clean', 'copy', 'webpack']);
+  grunt.registerTask('build', ['clean', 'copy', 'sass', 'webpack']);
 
   grunt.registerTask('default', []);
 };

@@ -11,7 +11,7 @@ import FluxComponent from 'flummox/component';
 
 // CSS
 require('normalize.css');
-require('../styles/main.css');
+require('../styles/style.scss');
 
 class Flux extends Flummox {
 	constructor() {

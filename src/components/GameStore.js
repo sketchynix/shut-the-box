@@ -1,3 +1,4 @@
+var React = require('react');
 var Util = require('./Util');
 import { Store } from 'flummox';
 
@@ -7,14 +8,6 @@ class CardModel {
 		this.isFlippable = true;
 		this.value = value;
 	}
-
-	// flip(){
-	// 	if(!this.state.flipped){
-	// 		this.setState({ flipped: true });
-	// 	} else if(this.state.isFlippable){
-	// 		this.setState({ flipped: false });
-	// 	}
-	// }
 }
 
 export default class GameStore extends Store {
@@ -62,7 +55,13 @@ export default class GameStore extends Store {
 	}
 
 	handleFlipCard(card){
-		console.log('handle', card);
+		if(!card.flipped){
+			card.flipped = true;
+		} else if(card.isFlippable){
+			card.flipped = false;
+		}
+
+		this.setState({ cards: this.state.cards });
 	}
 
 	endTurn(){
