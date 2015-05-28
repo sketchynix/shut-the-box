@@ -4,15 +4,13 @@ var React = require('react/addons');
 var Util = require('Util');
 
 var Dice = React.createClass({
-	getInitialState(){
-		return {
-			value: 1
-		};
-	},
-	roll(){
-		this.setState({ value: Util.randomInRange(1, 6) });
-
-		return this.state.value;
+	propTypes: {
+		value: React.PropTypes.oneOf([1,2,3,4,5,6])
+	}
+	render(){
+		return (
+			<div>{this.props.value}</div>;
+		)
 	}
 });
 
