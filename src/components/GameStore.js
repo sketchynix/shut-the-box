@@ -1,11 +1,29 @@
+var Util = require('./Util');
 import { Store } from 'flummox';
+
+class CardModel {
+	constructor(value){
+		this.flipped = false;
+		this.isFlippable = true;
+		this.value = value;
+	}
+
+	// flip(){
+	// 	if(!this.state.flipped){
+	// 		this.setState({ flipped: true });
+	// 	} else if(this.state.isFlippable){
+	// 		this.setState({ flipped: false });
+	// 	}
+	// }
+}
 
 export default class GameStore extends Store {
 	constructor(flux) {
 		super();
 
 		let gameActionIds = flux.getActionIds('game');
-		this.register(gameActionIds, this.handleRollDice);
+		this.register(gameActionIds.rollDice, this.handleRollDice);
+		this.register(gameActionIds.flipCard, this.handleFlipCard);
 
 		this.state = {
 			dice: [
@@ -16,14 +34,22 @@ export default class GameStore extends Store {
 			diceHaveBeenRolled: false,
 			diceNeedReRoll: false,
 			diceTotal: 0,
+			totalCards: 9,
 			isGameOver: false,
 			validRemainingCardCombos: []
 		};
+
+		this.addCards();
+	}
+
+	addCards() {
+		for(var i = 1; i <= this.state.totalCards; i++){
+			this.state.cards.push(new CardModel(i));
+		}
 	}
 
 	handleRollDice(die) {
 		var total = 0;
-
 		this.state.dice.forEach(function(die){
 			die.value = Util.randomInRange(1, 6);
 
@@ -33,6 +59,10 @@ export default class GameStore extends Store {
 		this.setState({ diceTotal: total });
 
 		this.checkIfGameOver();
+	}
+
+	handleFlipCard(card){
+		console.log('handle', card);
 	}
 
 	endTurn(){
@@ -97,7 +127,7 @@ export default class GameStore extends Store {
 
 			remainingValidCombos = allCombos.filter(function(curCombo){
 				return Util.sumArray(curCombo) === this.state.diceTotal;
-			});
+			}.bind(this));
 
 			this.setState({ validRemainingCardCombos: remainingValidCombos	});
 		}

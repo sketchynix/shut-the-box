@@ -23,18 +23,32 @@ class Flux extends Flummox {
 }
 
 class ShutTheBox extends React.Component {
+	flipCard(card) {
+		let gameActions = this.props.flux.getActions('game');
+		gameActions.flipCard(card);
+	}
+
+	rollDice(){
+		let gameActions = this.props.flux.getActions('game');
+		gameActions.rollDice(true);
+	}
+
 	render() {
 		/* jshint ignore:start */
+		var self = this;
+
 		var diceStartMessage = !this.props.diceHaveBeenRolled ? <p>Please roll the dice to start the game</p> : '';
 
 		var diceReRollMessage = this.props.diceNeedReRoll ? <p>Please roll the dice again</p> : '';
 
-		var dice = this.props.dice.map(function(die){
-			return <li className="dice-list-item"> <Dice value={die.value} /> </li>
+		var dice = this.props.dice.map(function(die, index){
+			return <li className="dice-list-item" key={index}> <Dice value={die.value} /> </li>
 		});
 
 		var cards = this.props.cards.map(function(card, index){
-			return <li className="card-list-item"> <Card value={index} /> </li>
+			return <li className="card-list-item" key={card.value}>
+				<Card value={card.value} onClick={self.flipCard.bind(self, card)} />
+			</li>
 		});
 
 		var gameOverMessage = this.props.isGameOver ? <div>
@@ -60,7 +74,7 @@ class ShutTheBox extends React.Component {
 
 				{gameOverMessage}
 
-		        <button onClick={this.props.rollDice}>Roll Dice</button>
+		        <button onClick={this.rollDice.bind(this)}>Roll Dice</button>
 		        <button onClick={this.endTurn}>End Turn</button>
 			</div>
 		);
@@ -71,7 +85,7 @@ class ShutTheBox extends React.Component {
 class App extends React.Component {
 	render() {
 		return (
-			<FluxComponent  flux={this.props.flux} connectToStores={'game'}>
+			<FluxComponent flux={this.props.flux} connectToStores={'game'}>
 				<ShutTheBox />
 			</FluxComponent>
 		);
