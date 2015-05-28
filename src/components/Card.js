@@ -4,7 +4,7 @@ var React = require('react/addons');
 
 var Card = React.createClass({
 	propTypes: {
-		value: React.PropTypes.oneOf([1,2,3,4,5,6,7,8,9]) //ensure the start value is a number between 1-9
+		value: React.PropTypes.oneOf([1, 2, 3, 4, 5, 6, 7, 8, 9]) //ensure the start value is a number between 1-9
 	},
 	/**
 	 * Set the initial state of our card
@@ -25,7 +25,7 @@ var Card = React.createClass({
 	},
 	render(){
 		return (
-			<div className="card-face">{this.value}</div>
+			<div className="card-face" onClick="{this.flip}">{this.value}</div>
 		)
 	}
 });
