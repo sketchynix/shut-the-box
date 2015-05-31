@@ -1,26 +1,16 @@
 'use strict';
 
-var React = require('react');
-var GameActions = require('./GameActions');
-var GameStore = require('./GameStore');
-var Card = require('./Card');
-var Dice = require('./Dice');
-var Util = require('./Util');
+import React from 'react';
 import { Actions, Store, Flummox } from 'flummox';
 import FluxComponent from 'flummox/component';
+import Flux from './Flux';
+import Card from './Card';
+import Dice from './Dice';
+import Util from './Util';
 
 // CSS
 require('normalize.css');
 require('../styles/style.scss');
-
-class Flux extends Flummox {
-	constructor() {
-		super();
-
-		this.createActions('game', GameActions);
-		this.createStore('game', GameStore, this);
-	}
-}
 
 class ShutTheBox extends React.Component {
 	flipCard(card) {

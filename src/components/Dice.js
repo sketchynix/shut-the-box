@@ -1,17 +1,20 @@
 'use strict';
 
-var React = require('react');
-var Util = require('./Util');
+import React from 'react';
+import FluxComponent from 'flummox/component';
 
-var Dice = React.createClass({
-	propTypes: {
-		value: React.PropTypes.oneOf([1,2,3,4,5,6])
-	},
+class Dice extends React.Component {
 	render(){
+		/* jshint ignore:start */
 		return (
 			<div className="die">{this.props.value}</div>
 		);
+		/* jshint ignore:end */
 	}
-});
+}
+
+Dice.propTypes = {
+	value: React.PropTypes.oneOf([1,2,3,4,5,6])
+};
 
 module.exports = Dice;
