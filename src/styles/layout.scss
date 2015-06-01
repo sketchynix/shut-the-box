@@ -30,6 +30,12 @@
         padding: 20px 0 0;
         vertical-align: top;
         user-select: none;
+
+        &.card-flipped{
+            .card-face{
+                margin-top: -20px;
+            }
+        }
     }
 }
 
