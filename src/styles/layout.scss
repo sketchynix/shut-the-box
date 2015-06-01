@@ -1,0 +1,40 @@
+.shut-the-box-game-wrap{
+    width: 960px;
+    margin: 0 auto;
+    padding: 40px;
+}
+
+.cards-list, .dice-list{
+    text-align: left;
+    margin: 1rem 0;
+
+    li{
+        display: inline-block;
+
+        &:first-child{
+            margin-left: 0;
+        }
+    }
+}
+
+.dice-list{
+    .dice-list-item {
+        margin: 8px;
+    }
+}
+
+.cards-list{
+    .card-list-item {
+        width: 8%;
+        margin: 0 1%;
+        padding: 20px 0 0;
+        vertical-align: top;
+        user-select: none;
+    }
+}
+
+.shut-the-box-btns-wrap{
+    button:last-child{
+        margin-right: 0;
+    }
+}

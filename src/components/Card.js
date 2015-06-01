@@ -7,7 +7,10 @@ class Card extends React.Component {
 	render(){
 		/* jshint ignore:start */
 		return (
-			<div className="card-face" onClick={this.props.onClick}>{this.props.value}</div>
+			<div className="card-face" onClick={this.props.onClick}>
+				<div className="card-face-front">{this.props.value}</div>
+				<div className="card-face-back">{this.props.value}</div>
+			</div>
 		)
 		/* jshint ignore:end */
 	}

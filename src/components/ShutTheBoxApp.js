@@ -10,38 +10,50 @@ import Util from './Util';
 
 // CSS
 require('normalize.css');
-require('../styles/style.scss');
+require('../styles/base.scss');
+require('../styles/font.scss');
+require('../styles/layout.scss');
+require('../styles/theme.scss');
 
 class ShutTheBox extends React.Component {
+	componentDidMount(){
+		this.gameActions = this.props.flux.getActions('game');
+	}
+
 	flipCard(card) {
-		let gameActions = this.props.flux.getActions('game');
-		gameActions.flipCard(card);
+		this.gameActions.flipCard(card);
 	}
 
 	rollDice(){
-		let gameActions = this.props.flux.getActions('game');
-		gameActions.rollDice(true);
+		this.gameActions.rollDice();
+	}
+
+	endTurn(){
+		this.gameActions.endTurn();
 	}
 
 	render() {
 		/* jshint ignore:start */
-		var self = this;
+		let self = this;
 
-		var diceStartMessage = !this.props.diceHaveBeenRolled ? <p>Please roll the dice to start the game</p> : '';
+		let diceStartMessage = !this.props.diceHaveBeenRolled ? <p className="message">Please roll the dice to start the game</p> : '';
 
-		var diceReRollMessage = this.props.diceNeedReRoll ? <p>Please roll the dice again</p> : '';
+		let diceReRollMessage = this.props.diceNeedReRoll ? <p className="message">Please roll the dice again</p> : '';
 
-		var dice = this.props.dice.map(function(die, index){
+		let dice = this.props.dice.map(function(die, index){
 			return <li className="dice-list-item" key={index}> <Dice value={die.value} /> </li>
 		});
 
-		var cards = this.props.cards.map(function(card, index){
-			return <li className="card-list-item" key={card.value}>
+		let cards = this.props.cards.map(function(card, index){
+			let flippedClass = card.flipped ? ' card-flipped ' : '';
+			let flippableClass = !card.isFlippable ? ' card-is-not-flippable ' : '';
+
+			return <li className={'card-list-item' + flippableClass + flippedClass } key={card.value}>
 				<Card value={card.value} onClick={self.flipCard.bind(self, card)} />
 			</li>
 		});
 
-		var gameOverMessage = this.props.isGameOver ? <div>
+		let gameOverMessage = this.props.isGameOver ? <div>
 	            <h2>GAME OVER.</h2>
 	            <h4>Score <span>{this.props.score}</span></h4>
 	        </div> : '';
@@ -50,7 +62,7 @@ class ShutTheBox extends React.Component {
 			<div className='shut-the-box-game-wrap' role="main">
 				<h3>Shut the box</h3>
 				<h5>Dice</h5>
-				<ul className="dice-list">
+				<ul className="unstyled-list dice-list">
 		            {dice}
 		        </ul>
 
@@ -58,14 +70,16 @@ class ShutTheBox extends React.Component {
 				{diceReRollMessage}
 
 				<h5>Cards</h5>
-				<ul className="cards-list">
+				<ul className="unstyled-list cards-list">
 					{cards}
 				</ul>
 
 				{gameOverMessage}
 
-		        <button onClick={this.rollDice.bind(this)}>Roll Dice</button>
-		        <button onClick={this.endTurn}>End Turn</button>
+				<div className="shut-the-box-btns-wrap">
+		        	<button className="btn btn-roll-dice" onClick={ this.rollDice.bind(this) }>Roll Dice</button>
+		        	<button className="btn btn-end-turn" onClick={ this.endTurn.bind(this) }>End Turn</button>
+		        </div>
 			</div>
 		);
 		/* jshint ignore:end */

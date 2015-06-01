@@ -8,4 +8,8 @@ export default class GameActions extends Actions {
 	flipCard(card){
 		return card;
 	}
+
+	endTurn(){
+		return true;
+	}
 }

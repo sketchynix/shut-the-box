@@ -1,0 +1,68 @@
+.shut-the-box-game-wrap{
+	background: #f1f1f1;
+}
+
+.dice-list-item{
+	font-size: 2rem;
+	padding: 10px 16px;
+	border: 1px solid #333;
+	color: #333;
+}
+
+.card-list-item {
+	background: #eee;
+
+	&.card-flipped{
+        .card-face{
+        	transform: rotateY(180deg);
+            margin-top: -20px;
+        }
+    }
+
+	&.card-is-not-flippable{
+		.card-face{
+		    background: #333;
+		}
+    }
+}
+
+.card-face{
+	background: #fff;
+	border-radius: 4px;
+    border: 1px solid #900;
+    color: #900;
+    text-align: center;
+    height: 80px;
+    transition: 0.3s;
+	transform-style: preserve-3d;
+	position: relative;
+
+    .card-face-front, .card-face-back{
+	    backface-visibility: hidden;
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		line-height: 80px;
+    }
+
+    .card-face-front{
+    	z-index: 2;
+		transform: rotateY(0deg);
+    }
+
+    .card-face-back{
+    	background: #fcfcfc;
+    	transform: rotateY(180deg);
+    }
+
+     &:hover, &:active{
+        cursor: pointer;
+    }
+}
+
+.message{
+	font-weight: 700;
+	color: #900;
+}

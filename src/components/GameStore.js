@@ -1,14 +1,7 @@
-var React = require('react');
-var Util = require('./Util');
+import React from 'react';
+import Util from './Util';
+import CardModel from './models/CardModel';
 import { Store } from 'flummox';
-
-class CardModel {
-	constructor(value){
-		this.flipped = false;
-		this.isFlippable = true;
-		this.value = value;
-	}
-}
 
 export default class GameStore extends Store {
 	constructor(flux) {
@@ -17,6 +10,7 @@ export default class GameStore extends Store {
 		let gameActionIds = flux.getActionIds('game');
 		this.register(gameActionIds.rollDice, this.handleRollDice);
 		this.register(gameActionIds.flipCard, this.handleFlipCard);
+		this.register(gameActionIds.endTurn, this.handleEndTurn);
 
 		this.state = {
 			dice: [
@@ -33,65 +27,104 @@ export default class GameStore extends Store {
 		};
 
 		this.addCards();
+
+		alert('Please roll the dice to start the game');
 	}
 
 	addCards() {
 		for(var i = 1; i <= this.state.totalCards; i++){
-			this.state.cards.push(new CardModel(i));
+			this.state.cards.push( new CardModel(i) );
 		}
 	}
-
-	handleRollDice(die) {
+	/**
+	 * Roll the dice, update the diceTotal
+	 * and check if the game is over after
+	 * @return {void}
+	 */
+	handleRollDice() {
 		var total = 0;
+
 		this.state.dice.forEach(function(die){
 			die.value = Util.randomInRange(1, 6);
 
 			total += die.value;
 		});
 
-		this.setState({ diceTotal: total });
+		this.setState({
+			diceTotal: total,
+			diceHaveBeenRolled: true,
+			diceNeedReRoll: false
+		});
 
-		this.checkIfGameOver();
+		this.checkIfGameOver(total);
 	}
 
+	/**
+	 * Flip over a given card
+	 * A card can only be flipped if it has not been flipped in a previous turn
+	 * @param  {object} card [CardModel object]
+	 * @return {void}
+	 */
 	handleFlipCard(card){
-		if(!card.flipped){
-			card.flipped = true;
-		} else if(card.isFlippable){
-			card.flipped = false;
-		}
+		if(this.state.diceHaveBeenRolled){
+			if(!card.flipped){
+				card.flipped = true;
+			} else if(card.isFlippable){
+				card.flipped = false;
+			}
 
-		this.setState({ cards: this.state.cards });
+			this.setState({ cards: this.state.cards });
+		}
 	}
 
-	endTurn(){
-		//get the cards that are flipped
-		var comboCards = this.state.cards.filter(function(card){
+	/**
+	 * Returns all cards that are currently flipped
+	 * @return {array}
+	 */
+	getFlippedCards(){
+		return this.state.cards.filter(function(card){
 			return card.flipped && card.isFlippable;
 		});
+	}
 
-		var combo = comboCards.map(function(card){
-			return card.value;
-		});
+	handleEndTurn(){
+		if(this.state.diceHaveBeenRolled && !this.state.diceNeedReRoll){
+			//get the cards that are flipped
+			var comboCards = this.getFlippedCards();
 
-		//if the sum is valid
-		if(Util.sumArray(combo) === this.state.diceTotal){
-			comboCards.forEach(function(card){
-				card.isFlippable = false;
+			var combo = comboCards.map(function(card){
+				return card.value;
 			});
 
-			this.checkIfGameOver();
+			//if the sum is valid
+			if(Util.sumArray(combo) === this.state.diceTotal){
 
-			return true;
+				comboCards.forEach(function(card){
+					card.isFlippable = false;
+				});
+
+				if(!this.checkIfGameOver(this.state.diceTotal)){
+					this.setState({ diceNeedReRoll: true });
+
+					alert('Good math! Valid combination. Please roll again for your next turn!');
+				}
+				return true;
+			} else {
+				alert('Invalid combination. Please ensure the sum of the cards and dice match.');
+			}
 		}
 
 		return false;
 	}
 
-	checkIfGameOver(){
-		if(!this.calculateCardCombos()){
+	checkIfGameOver(diceTotal){
+		if(!this.calculateCardCombos(diceTotal)){
 			this.end();
+
+			return true;
 		}
+
+		return false;
 	}
 
 	/**
@@ -114,9 +147,10 @@ export default class GameStore extends Store {
 
 	/**
 	 * Figure out the remaining valid array combinations
+	 * @param {number} the total of the dice to check against
 	 * @return {number} number of valid card combos left
 	 */
-	calculateCardCombos(){
+	calculateCardCombos(diceTotal){
 		var unusedCards = this.getUnflippedCardNumbers(),
 			allCombos = [],  //all possible combinations
 			remainingValidCombos = [];
@@ -125,13 +159,13 @@ export default class GameStore extends Store {
 			allCombos = Util.combinations(unusedCards);
 
 			remainingValidCombos = allCombos.filter(function(curCombo){
-				return Util.sumArray(curCombo) === this.state.diceTotal;
+				return Util.sumArray(curCombo) === diceTotal;
 			}.bind(this));
 
-			this.setState({ validRemainingCardCombos: remainingValidCombos	});
+			this.setState({ validRemainingCardCombos: remainingValidCombos });
 		}
 
-		return this.state.validRemainingCardCombos.length;
+		return remainingValidCombos.length;
 	}
 
 	/**
@@ -139,9 +173,13 @@ export default class GameStore extends Store {
 	 * @return {[type]}
 	 */
 	end(){
+		let score = Util.sumArray( this.getUnflippedCardNumbers() );
+
 		this.setState({
 			isGameOver: true,
-			score: Util.sumArray( this.getUnflippedCardNumbers() )
+			score: score
 		});
+
+		alert('Game over! Your score ' + score);
 	}
 }
